@@ -28,22 +28,22 @@ class Gui:
     def create_main_window(self):
         self.time['text'] = "00:00"
         frame = Frame(self.root)
-        _btnStart = Button(frame, fg='green', text='Start', command=start_chronometer).grid(row=1,
-                                                                                            column=1,
-                                                                                            padx=2,
-                                                                                            pady=5)
-        _btnStop = Button(frame, fg='red', text='Stop', command=stop_chronometer).grid(row=1,
-                                                                                       column=2,
-                                                                                       padx=2,
-                                                                                       pady=5)
-        _btnResume = Button(frame, fg='blue', text='Resume', command=resume_chronometer).grid(row=1,
-                                                                                              column=3,
-                                                                                              padx=2,
-                                                                                              pady=5)
-        _btnInput = Button(frame, fg='blue', text='Changing time', command=click_time_settings_window).grid(row=2,
-                                                                                                            column=2,
-                                                                                                            padx=2,
-                                                                                                            pady=5)
+        _btnStart = Button(frame, fg='green', text='Commencer', command=start_chronometer).grid(row=1,
+                                                                                                column=1,
+                                                                                                padx=2,
+                                                                                                pady=5)
+        _btnStop = Button(frame, fg='red', text='Arrêter', command=stop_chronometer).grid(row=1,
+                                                                                          column=2,
+                                                                                          padx=2,
+                                                                                          pady=5)
+        _btnResume = Button(frame, fg='blue', text='Réinitialiser', command=resume_chronometer).grid(row=1,
+                                                                                                     column=3,
+                                                                                                     padx=2,
+                                                                                                     pady=5)
+        _btnInput = Button(frame, fg='blue', text='Réglage', command=click_time_settings_window).grid(row=2,
+                                                                                                      column=2,
+                                                                                                      padx=2,
+                                                                                                      pady=5)
         frame.pack()
 
     def create_time_settings_window(self):
@@ -51,7 +51,7 @@ class Gui:
         self.input_txt = Text(self.root,
                               height=1,
                               width=5)
-        self.btnValidate = Button(frame, fg='green', text='Go', command=get_value).grid(row=1,
+        self.btnValidate = Button(frame, fg='green', text='Ok', command=get_value).grid(row=1,
                                                                                         column=2,
                                                                                         padx=2,
                                                                                         pady=5)
@@ -77,7 +77,7 @@ def start_chronometer():
 
     if my_chronometer.max_time <= my_chronometer.seconds:
         my_gui.time.config(fg="red", font=("", "16"))
-        my_gui.time['text'] = "Time off!"
+        my_gui.time['text'] = "Posez les stylos 🔔 !"
         stop_chronometer()
     else:
         my_gui.time.config(fg="black", font=("", "18"))
@@ -107,7 +107,9 @@ def get_value():
     except:
         time_settings_window.root.withdraw()
         time_settings_window.root.deiconify()
-        messagebox.showinfo('Error', 'format not correct\nCorrect format: xx:xx\nSet default time to 25 minutes')
+        messagebox.showinfo('Erreur', 'Le format n\'est pas correct\n'
+                                      'Le format correct est : MM:SS\n'
+                                      'Le chronomètre est réglé pour 25 min.')
         max_time = 25 * 60
         my_chronometer.max_time = max_time
         return
@@ -117,13 +119,13 @@ def get_value():
 
 def click_time_settings_window():
     global time_settings_window
-    time_settings_window = Gui(title='time setting')
+    time_settings_window = Gui(title='Réglage')
     time_settings_window.create_time_settings_window()
 
 
 if __name__ == "__main__":
     my_chronometer = Chrono()
     time_settings_window = None
-    my_gui = Gui(title='chronometer')
+    my_gui = Gui(title='Chronomètre')
     my_gui.create_main_window()
     my_gui.main_loop()
