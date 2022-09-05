@@ -1,5 +1,5 @@
-from tkinter import Tk, Label, Button, Frame, Text, messagebox
-
+from tkinter import Tk, Label, Button, Frame, Text, messagebox, Radiobutton
+from tkinter import ttk
 
 class Chrono:
 
@@ -17,8 +17,13 @@ class Gui:
         self.root.title(title)
         self.root.resizable(0, 0)
         self.root.config(bd=30)
+        self.frame = Frame(self.root)
+        self.frame2 = Frame(self.root, width=100, height=100)
         self.time = Label(self.root, fg='black', width=20, font=("", "18"))
-        self.time.pack()
+        self.time.grid(row=0,
+                       column=0,
+                       padx=2,
+                       pady=5)
         self.input_txt = None
         self.btnValidate = None
 
@@ -26,25 +31,82 @@ class Gui:
         self.root.call('wm', 'attributes', '.', '-topmost', '1')
 
     def create_main_window(self):
+        ttk.Separator(
+            master=self.root,
+            orient='horizontal',
+            style='blue.TSeparator',
+            class_=ttk.Separator,
+            takefocus=1,
+            cursor='plus'
+        ).grid(row=1, column=0, ipadx=106, pady=3)
+
         self.time['text'] = "00:00"
-        frame = Frame(self.root)
-        _btnStart = Button(frame, fg='green', text='Start', command=start_chronometer).grid(row=1,
-                                                                                            column=1,
+        _btnStart = Button(self.frame, fg='green', text='Start', command=start_chronometer).grid(row=1,
+                                                                                            column=0,
                                                                                             padx=2,
                                                                                             pady=5)
-        _btnStop = Button(frame, fg='red', text='Stop', command=stop_chronometer).grid(row=1,
-                                                                                       column=2,
+        _btnStop = Button(self.frame, fg='red', text='Stop', command=stop_chronometer).grid(row=1,
+                                                                                       column=1,
                                                                                        padx=2,
                                                                                        pady=5)
-        _btnResume = Button(frame, fg='blue', text='Resume', command=resume_chronometer).grid(row=1,
-                                                                                              column=3,
+        _btnResume = Button(self.frame, fg='blue', text='Resume', command=resume_chronometer).grid(row=1,
+                                                                                              column=2,
                                                                                               padx=2,
                                                                                               pady=5)
-        _btnInput = Button(frame, fg='blue', text='Changing time', command=click_time_settings_window).grid(row=2,
+
+        ttk.Separator(
+            master=self.root,
+            orient='horizontal',
+            style='blue.TSeparator',
+            class_=ttk.Separator,
+            takefocus=1,
+            cursor='plus'
+        ).grid(row=3, column=0, ipadx=106, pady=3)
+
+        _btnInput = Button(self.frame2, fg='blue', text='Changing time', command=click_time_settings_window).grid(row=0,
                                                                                                             column=2,
                                                                                                             padx=2,
                                                                                                             pady=5)
-        frame.pack()
+        self.frame.grid(row=2,
+                   column=0,
+                   padx=2,
+                   pady=5)
+        # Frame 2
+        self.frame2.grid(row=4,
+                    column=0,
+                    padx=2,
+                    pady=5)
+
+        ttk.Separator(
+            master=self.frame2,
+            orient='vertical',
+            style='blue.TSeparator',
+            class_=ttk.Separator,
+            takefocus=1,
+            cursor='plus'
+        ).grid(row=0, column=1, ipady=30, padx=15)
+
+        def todo():
+            print("todo")
+        frame3 = Frame(self.frame2)
+        frame3.grid(row=0,
+                  column=0,
+                  padx=2,
+                  pady=5,
+                    )
+        _radioButtonChronometer = Radiobutton(frame3, fg='blue', text='chronometer', command=todo)
+        _radioButtonTime = Radiobutton(frame3, fg='blue', text='timer', command=todo)
+        _radioButtonChronometer.grid(row=0,
+                  column=0,
+                  padx=2,
+                  pady=5,
+                                     sticky="w")
+
+        _radioButtonTime.grid(row=1,
+                          column=0,
+                          padx=2,
+                          pady=5,
+                              sticky = "w")
 
     def create_time_settings_window(self):
         frame = Frame(self.root)
@@ -55,8 +117,8 @@ class Gui:
                                                                                         column=2,
                                                                                         padx=2,
                                                                                         pady=5)
-        self.input_txt.pack()
-        frame.pack()
+        self.input_txt.grid()
+        frame.grid()
 
     def main_loop(self):
         self.root.mainloop()
