@@ -1,6 +1,7 @@
 from tkinter import Tk, Label, Button, Frame, Text, messagebox, Radiobutton, IntVar
 from tkinter import ttk
 
+
 class Chrono:
 
     def __init__(self, is_pause=False):
@@ -18,9 +19,7 @@ class Gui:
         self.root = Tk()
         self.root.title(title)
         self.root.resizable(0, 0)
-        self.root.config(bd=30)
         self.frame_cmd_button = Frame(self.root)
-        # self.frame_settings = Frame(self.root, width=100, height=100)
         self.frame_settings = Frame(self.root)
         self.frame_radio_button = Frame(self.frame_settings)
         self.time = Label(self.root, fg='black', width=20, font=("", "18"))
@@ -31,7 +30,6 @@ class Gui:
 
         # Windows should stay in foreground
         self.root.call('wm', 'attributes', '.', '-topmost', '1')
-
 
     def create_radio_buttons(self):
         _radioButtonChronometer = Radiobutton(
@@ -118,34 +116,42 @@ class Gui:
         self.input_txt.grid()
         frame_cmd_button.grid()
 
-
     def main_loop(self):
         self.root.mainloop()
 
 
 def display_time_in_mm_ss(time_in_seconds, max_time):
-    time_to_display = max_time - time_in_seconds
-    return '{:02d}:{:02d}'.format(time_to_display // 60, time_to_display % 60)
+    timer_behaviour = my_chronometer.timer_behaviour
+    if not timer_behaviour:
+        time_to_display = max_time - time_in_seconds
+        return '{:02d}:{:02d}'.format(time_to_display // 60, time_to_display % 60)
+    else:
+        time_to_display = time_in_seconds
+        return '{:02d}:{:02d}'.format(time_to_display // 60, time_to_display % 60)
+
+
+def reset_settings_ui():
+    my_gui.frame_settings.grid_remove()
+    my_gui.frame_settings = Frame(master=my_gui.root)
+    my_gui.frame_radio_button.grid_remove()
+    my_gui.frame_radio_button = Frame(master=my_gui.frame_settings)
 
 
 def change_to_timer_mode():
-    print("change to timer mode")
-    my_gui.frame_settings.grid_remove()
-    my_gui.frame_settings = Frame(my_gui.root)
-    my_gui.frame_radio_button.grid_remove()
-    my_gui.frame_radio_button = Frame(master=my_gui.root)
+    reset_settings_ui()
     my_gui.frame_cmd_button.grid(row=2, column=0, padx=2, pady=5)
     my_gui.frame_settings.grid(row=4, column=0, padx=2, pady=5)
     my_gui.frame_radio_button.grid(row=4, column=0, padx=2, pady=5)
+
     my_gui.create_radio_buttons()
+    my_chronometer.timer_behaviour = True
+    # Set max time to 4 hours
+    my_chronometer.max_time = 4 * 60 * 60
+    resume_chronometer()
 
 
 def change_to_chronometer_mode():
-    print("change to chronometer mode")
-    my_gui.frame_settings.grid_remove()
-    my_gui.frame_radio_button.grid_remove()
-    my_gui.frame_settings = Frame(master=my_gui.root)
-    my_gui.frame_radio_button = Frame(master=my_gui.frame_settings)
+    reset_settings_ui()
     my_gui.frame_settings.grid(row=4, column=0, padx=2, pady=5)
     _separator_radio_button_time_setting_button = ttk.Separator(
         master=my_gui.frame_settings,
@@ -160,6 +166,12 @@ def change_to_chronometer_mode():
 
     my_gui.frame_radio_button.grid(row=0, column=0, padx=2, pady=5)
     my_gui.create_radio_buttons()
+
+    # Set max time to 25 minutes
+    my_chronometer.max_time = 25 * 60
+    my_chronometer.timer_behaviour = False
+    resume_chronometer()
+
 
 def start_chronometer():
     try:
@@ -207,6 +219,7 @@ def get_value():
         return
     my_chronometer.max_time = max_time
     time_settings_window.root.destroy()
+    resume_chronometer()
 
 
 def click_time_settings_window():
