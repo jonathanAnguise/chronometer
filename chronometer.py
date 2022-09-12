@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Button, Frame, Text, messagebox, Radiobutton, IntVar
+from tkinter import Tk, Label, Button, Frame, Text, messagebox, Radiobutton, IntVar, StringVar
 from tkinter import ttk
 
 
@@ -101,20 +101,52 @@ class Gui:
         self.create_radio_buttons()
 
     def create_time_settings_window(self):
-        frame_cmd_button = Frame(self.root)
         self.input_txt = Text(
             self.root,
             height=1,
             width=5
         )
+
+        frame_minutes_seconds = Frame(master=self.root)
+        frame_minutes_seconds.grid(row=0, column=0)
+
         self.btnValidate = Button(
-            frame_cmd_button,
+            self.root,
             fg='green',
             text='Go',
             command=get_value
-        ).grid(row=1, column=2, padx=2, pady=5)
-        self.input_txt.grid()
-        frame_cmd_button.grid()
+        ).grid(row=1, column=0, padx=2, pady=5)
+
+        current_value_minutes = StringVar(value=0)
+        current_value_seconds = StringVar(value=25)
+        spinbox_minutes = ttk.Spinbox(
+            frame_minutes_seconds,
+            from_=0,
+            to=240,  # 4 hours it's enough
+            textvariable=current_value_minutes,
+            wrap=True,
+            width=5
+        )
+        spinbox_minutes.grid(row=0, column=0, padx=4, pady=5, sticky='w')
+
+        spinbox_seconds = ttk.Spinbox(
+            frame_minutes_seconds,
+            from_=0,
+            to=59,
+            textvariable=current_value_seconds,
+            wrap=True,
+            width=5
+        )
+        spinbox_seconds.grid(row=0, column=2, padx=4, pady=1, sticky='e')
+
+        hours_minute_separator_label = Label(
+            master=frame_minutes_seconds,
+            fg='black',
+            width=1,
+            font=("", "18")
+        )
+        hours_minute_separator_label.grid(row=0, column=1, padx=2, pady=5)
+        hours_minute_separator_label['text'] = ":"
 
     def main_loop(self):
         self.root.mainloop()
